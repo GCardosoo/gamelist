@@ -3,6 +3,7 @@ package com.gcardosoo.gamelist.services;
 import com.gcardosoo.gamelist.dtos.GameDTO;
 import com.gcardosoo.gamelist.dtos.GameMinDTO;
 import com.gcardosoo.gamelist.entities.Game;
+import com.gcardosoo.gamelist.projections.GameMinProjection;
 import com.gcardosoo.gamelist.repositories.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,5 +34,11 @@ public class GameService {
         }
 
         throw new NoSuchElementException();
+    }
+
+    @Transactional(readOnly = true)
+    public List<GameMinDTO> findByList(Long listId){
+        List<GameMinProjection> games = gameRepository.searchByList(listId);
+        return games.stream().map(game -> new GameMinDTO(game)).toList();
     }
 }
